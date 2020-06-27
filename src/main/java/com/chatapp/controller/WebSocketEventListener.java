@@ -23,7 +23,7 @@ public class WebSocketEventListener {
 	@EventListener
 	public void handleWebSocketConnectListener(SessionConnectedEvent event) {
 
-		logger.info("Recieved a new web socket connection");
+		logger.info("<!!------ Recieved a new web socket connection ------!!>");
 
 	}
 
@@ -36,7 +36,7 @@ public class WebSocketEventListener {
 
 		if (username != null) {
 
-			logger.info("User Disconnected: " + username);
+			logger.info("<!!------ User Disconnected: " + username + " ------!!>");
 
 			ChatMessage chatMessage = new ChatMessage();
 			chatMessage.setType(ChatMessage.MessageType.LEAVE);
