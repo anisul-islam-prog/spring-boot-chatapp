@@ -27,3 +27,6 @@ Alternatively, you can run the app directly without packaging it like so -
 ```bash
 mvn spring-boot:run
 ```
+
+> ##### Go to localhost:8080 to join
+> ##### Go to localhost:8080/admin to kick
