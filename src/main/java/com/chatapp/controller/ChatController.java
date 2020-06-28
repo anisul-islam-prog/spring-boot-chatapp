@@ -35,5 +35,18 @@ public class ChatController {
 		return chatMessage;
 
 	}
+	@MessageMapping("/chat.removeUser")
+	@SendTo("/topic/public")
+	public ChatMessage removeUser(@Payload ChatMessage chatMessage, SimpMessageHeaderAccessor headerAccessor) {
+
+		/**
+		 *  Remove a user in the websocket session
+		 */
+		headerAccessor.getSessionAttributes().put("adminCommand", chatMessage.getAdminCommand());
+		String username = chatMessage.getAdminCommand();
+		logger.info("<!!------ Kicked User: " + username + " ------!!>");
+		return chatMessage;
+
+	}
 
 }

@@ -4,9 +4,10 @@ public class ChatMessage {
 	private MessageType type;
 	private String content;
 	private String sender;
+	private String adminCommand;
 
 	public enum MessageType {
-		CHAT, JOIN, LEAVE
+		CHAT, JOIN, LEAVE, KICK
 	}
 
 	public MessageType getType() {
@@ -31,6 +32,14 @@ public class ChatMessage {
 
 	public void setSender(String sender) {
 		this.sender = sender;
+	}
+
+	public String getAdminCommand() {
+		return adminCommand;
+	}
+
+	public void setAdminCommand(String adminCommand) {
+		this.adminCommand = adminCommand;
 	}
 
 	@Override

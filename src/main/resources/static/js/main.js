@@ -17,7 +17,7 @@ var colors = [
 function connect(event) {
     username = document.querySelector('#name').value.trim();
 
-    if(username) {
+    if (username) {
         usernamePage.classList.add('hidden');
         chatPage.classList.remove('hidden');
 
@@ -38,7 +38,7 @@ function onConnected() {
     // Tell your username to the server
     stompClient.send("/app/chat.addUser",
         {},
-        JSON.stringify({sender: username, type: 'JOIN'})
+        JSON.stringify({ sender: username, type: 'JOIN' })
     );
 
     connectingElement.classList.add('hidden');
@@ -50,11 +50,11 @@ function onError(error) {
     connectingElement.style.color = 'red';
 }
 
-function disconnect(event){
+function disconnect(event) {
     stompClient.disconnect(onDisconnected, onDisconnectError);
 }
 
-function onDisconnected(){
+function onDisconnected() {
     var messageElement = document.createElement('li');
     usernamePage.classList.remove('hidden');
     chatPage.classList.add('hidden');
@@ -71,15 +71,24 @@ function onDisconnected(){
     messageArea.scrollTop = messageArea.scrollHeight;
 }
 
-function onDisconnectError(){
+function onDisconnectError() {
     onnectingElement.textContent = 'Could not disconnect to WebSocket server. Please refresh this page to try again!';
     connectingElement.style.color = 'red';
 }
 
+function kickUser(){
+    stompClient.disconnect(onKickUser);
+    usernamePage.classList.remove('hidden');
+    chatPage.classList.add('hidden');
+    alert("You have been kicked");
+}
+function onKickUser(){
+
+}
 
 function sendMessage(event) {
     var messageContent = messageInput.value.trim();
-    if(messageContent && stompClient) {
+    if (messageContent && stompClient) {
         var chatMessage = {
             sender: username,
             content: messageInput.value,
@@ -97,7 +106,14 @@ function onMessageReceived(payload) {
 
     var messageElement = document.createElement('li');
 
-    if(message.type === 'JOIN') {
+    if (message.type === 'KICK') {
+        messageElement.classList.add('event-message');
+        message.content = message.adminCommand + ' is kicked!';
+        if (username === message.adminCommand) {
+            kickUser();
+        }
+
+    } else if (message.type === 'JOIN') {
         messageElement.classList.add('event-message');
         message.content = message.sender + ' joined!';
     } else if (message.type === 'LEAVE') {
