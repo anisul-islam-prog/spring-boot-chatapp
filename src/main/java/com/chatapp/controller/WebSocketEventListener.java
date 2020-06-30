@@ -1,5 +1,12 @@
 package com.chatapp.controller;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,11 +44,44 @@ public class WebSocketEventListener {
 		if (username != null) {
 
 			logger.info("<!!------ User Disconnected: " + username + " ------!!>");
+			String userListFilePath = System.getProperty("user.dir") + "/src/main/resources/userList.txt";
+			String tempFilePath = System.getProperty("user.dir") + "/src/main/resources/tempList.txt";
+			File tempFile = new File(tempFilePath);
+			File userListFile = new File(userListFilePath);
+			try (FileReader userListFileReader = new FileReader(userListFile)) {
+				tempFile.createNewFile();
+				try (FileWriter tmpw = new FileWriter(tempFile, true)) {
+					try (BufferedWriter bw = new BufferedWriter(tmpw)){
+					try (BufferedReader br = new BufferedReader(userListFileReader)) {
+							String usernameFromFile = null;
+							while ((usernameFromFile = br.readLine()) != null) {
+								logger.debug("username " + usernameFromFile);
+								usernameFromFile = usernameFromFile.trim();
+								if(!usernameFromFile.equalsIgnoreCase(username)) {
+									bw.write(usernameFromFile);
+									bw.newLine();
+								}
+							}
+						}
+					}
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			if(userListFile.delete()) {
+				
+				logger.debug("userListFile deleted....");
+				boolean successful = tempFile.renameTo(userListFile);
+				if(successful) {
+					logger.debug("tempFile renamed to userListFile...");
+				}
+				
+			}
 
 			ChatMessage chatMessage = new ChatMessage();
 			chatMessage.setType(ChatMessage.MessageType.LEAVE);
 			chatMessage.setSender(username);
-			
+
 			messagingTemplate.convertAndSend("/topic/public", chatMessage);
 
 		}

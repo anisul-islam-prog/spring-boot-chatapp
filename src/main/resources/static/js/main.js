@@ -82,9 +82,6 @@ function kickUser(){
     chatPage.classList.add('hidden');
     alert("You have been kicked");
 }
-function onKickUser(){
-
-}
 
 function sendMessage(event) {
     var messageContent = messageInput.value.trim();

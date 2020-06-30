@@ -5,6 +5,7 @@ public class ChatMessage {
 	private String content;
 	private String sender;
 	private String adminCommand;
+	private String errorMessage;
 
 	public enum MessageType {
 		CHAT, JOIN, LEAVE, KICK
@@ -44,14 +45,25 @@ public class ChatMessage {
 
 	@Override
 	public String toString() {
-		return "ChatMessage [type=" + type + ", content=" + content + ", sender=" + sender + "]";
+		return "ChatMessage [type=" + type + ", content=" + content + ", sender=" + sender + ", adminCommand="
+				+ adminCommand + ", errorMessage=" + errorMessage + "]";
+	}
+
+	public String getErrorMessage() {
+		return errorMessage;
+	}
+
+	public void setErrorMessage(String errorMessage) {
+		this.errorMessage = errorMessage;
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + ((adminCommand == null) ? 0 : adminCommand.hashCode());
 		result = prime * result + ((content == null) ? 0 : content.hashCode());
+		result = prime * result + ((errorMessage == null) ? 0 : errorMessage.hashCode());
 		result = prime * result + ((sender == null) ? 0 : sender.hashCode());
 		result = prime * result + ((type == null) ? 0 : type.hashCode());
 		return result;
@@ -66,10 +78,20 @@ public class ChatMessage {
 		if (getClass() != obj.getClass())
 			return false;
 		ChatMessage other = (ChatMessage) obj;
+		if (adminCommand == null) {
+			if (other.adminCommand != null)
+				return false;
+		} else if (!adminCommand.equals(other.adminCommand))
+			return false;
 		if (content == null) {
 			if (other.content != null)
 				return false;
 		} else if (!content.equals(other.content))
+			return false;
+		if (errorMessage == null) {
+			if (other.errorMessage != null)
+				return false;
+		} else if (!errorMessage.equals(other.errorMessage))
 			return false;
 		if (sender == null) {
 			if (other.sender != null)

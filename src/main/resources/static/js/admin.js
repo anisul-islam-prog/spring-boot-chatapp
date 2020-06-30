@@ -37,8 +37,13 @@ function disconnect(event){
 
 function onMessageReceived(payload) {
     var message = JSON.parse(payload.body);
+    var error = message.errorMessage;
+    if(error){
+        alert(error);
+    }else{
+        alert(message.adminCommand+ ' has been kicked');
+    }
     disconnect();
-    alert(message.adminCommand+ ' has been kicked');
 }
 
 usernameForm.addEventListener('submit', connect, true);
